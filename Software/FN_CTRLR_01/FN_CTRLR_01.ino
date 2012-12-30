@@ -23,6 +23,8 @@ int i = 1;
 int j = 0;
 int k = 0;
 int l = 0;
+int m = 0;
+int n = 0;
 int delay_time = 75;
 int currentSine = 0;
 int currentSine2 = 0;
@@ -30,7 +32,8 @@ int pushEffect = 0;
 int buttonState;
 int prevState;
 int zeroCross;
-
+int flashEffect = 0;
+int flashEffect2 = 0;
 int newValues[6];
 
 void setup() {
@@ -64,6 +67,17 @@ void loop(){
     if (k>100 && j==0) zeroCross = 1;        //detect zero crosse to sync with sinewave
     if (k<250 && zeroCross == 0) pushEffect = getSine(k+41);  //generate afterglow
     else pushEffect = currentSine;
+    if (m==1) flashEffect2 = 0;
+    else 
+    {
+      if (m==3) flashEffect2 = 0;
+      else 
+      {
+        flashEffect = 255;
+        flashEffect2 = 255;
+      }
+    }
+    
     
     getValues(i);
     analogWrite(out_FAN,newValues[0]);
@@ -74,6 +88,10 @@ void loop(){
     analogWrite(out_BTN_BT,newValues[5]);
     
     j++;
+    m++;
+    n++;
+    if (n==111) n=0;
+    if (m==10) m=0;
     if (k<250) k++;
     if (j>100) 
     {
@@ -89,33 +107,33 @@ void getValues(int selector){
   if(selector == 1) {
     newValues[0] = 100;            //FAN
     newValues[1] = currentSine;    //R
-    newValues[2] = 0;              //G
-    newValues[3] = 0;              //B
+    newValues[2] = currentSine2;   //G
+    newValues[3] = currentSine2;   //B
     newValues[4] = currentSine;    //TOP LED
-    newValues[5] = pushEffect;    //BOTTOM LED
+    newValues[5] = pushEffect;     //BOTTOM LED
     return;
   }
   if(selector == 2) {
     newValues[0] = 180;
-    newValues[1] = currentSine;
-    newValues[2] = currentSine2;
-    newValues[3] = currentSine2;
-    newValues[4] = currentSine;
-    newValues[5] = pushEffect;
-    return;
-  }  
-  if(selector == 3) {
-    newValues[0] = 255;
     newValues[1] = currentSine;
     newValues[2] = 0;
     newValues[3] = 0;
     newValues[4] = currentSine;
     newValues[5] = pushEffect;
     return;
+  }  
+  if(selector == 3) {
+    newValues[0] = 255;
+    newValues[1] = flashEffect;
+    newValues[2] = flashEffect2;
+    newValues[3] = flashEffect2;
+    newValues[4] = currentSine;
+    newValues[5] = pushEffect;
+    return;
   }
   if(selector == 4){
     newValues[0] = 100;
-    newValues[1] = currentSine;
+    newValues[1] = 255;
     newValues[2] = currentSine;
     newValues[3] = currentSine;
     newValues[4] = currentSine;
