@@ -59,7 +59,8 @@ void loop(){
   
     if(i==10) i=1;
     currentSine = getSine(j); //from 0 to 81 = pulse, higher = 0
-    currentSine2 = getSine(l); //will only generate 1 pulse every 2 pulses generated with "j"
+    if (l==0) currentSine2 = currentSine;
+    else currentSine2 = 0;
     if (k>100 && j==0) zeroCross = 1;        //detect zero crosse to sync with sinewave
     if (k<250 && zeroCross == 0) pushEffect = getSine(k+41);  //generate afterglow
     else pushEffect = currentSine;
@@ -73,10 +74,13 @@ void loop(){
     analogWrite(out_BTN_BT,newValues[5]);
     
     j++;
-    l++;
     if (k<250) k++;
-    if (j>100) j=0;
-    if (l>200) l=0;
+    if (j>100) 
+    {
+      j=0;
+      l++;
+    }
+    if (l==2) l=0;
 
     delay(delay_time);
 }
